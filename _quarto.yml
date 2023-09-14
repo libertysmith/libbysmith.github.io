@@ -1,0 +1,25 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Methods of Data Collection by Libby Smith"
+  margin-footer: |
+   ![Logo image](/utdfooter.jpg)
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: CV
+format:
+  html:
+    theme: spacelab
+    light: flatly
+    dark: darkly
+    css: styles.css
+    toc: true
+
+editor: visual
+
