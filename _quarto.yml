@@ -1,0 +1,35 @@
+project:
+  type: website
+  output-dir: docs
+
+website:
+  title: "Methods of Data Collection by Libby Smith"
+  margin-footer: |
+   ![ ](/utdfooter.jpg)
+
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: about.qmd
+        text: CV
+      - href: writing.qmd
+        text: Analysis Writing
+      - text: Assignments
+        menu: 
+          - href: assignment1.qmd
+            text: Create a Qualtrics Survey
+          - href: assignment2.qmd
+            text: Google Trends VS Rstudio gtrends
+          - href: assignment3.qmd
+            text: Latent Semantic Text Analysis
+format:
+  html:
+    theme: spacelab
+    light: flatly
+    dark: darkly
+    css: styles.css
+    toc: true
+
+editor: visual
+
