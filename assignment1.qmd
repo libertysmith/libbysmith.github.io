@@ -1,0 +1,37 @@
+# Analyze a Qualtrics Survey Template and Improve it
+
+This Movie Rental Behaviors Survey Template is analyzed for the purposes of assessing its internal and external validity. You can take or review the unedited survey [here](https://utdallas.qualtrics.com/jfe/form/SV_5dOAMCIH7ZQqb8G).
+
+#### How is the survey structured?
+#### What is it composed of?
+#### How are they ordered?
+
+In this comprehensive survey, we delve into the nuances of movie renting preferences and habits, leveraging the power of data analytics to extract meaningful insights. Our survey comprises a total of 18 crafted Qualtrics questions, each strategically designed to uncover the fascinating layers of consumer behavior.
+
+The journey begins with the first question, which unfolds into a captivating narrative with 12 sub-questions, presented with the Likert scale responses. These sub-questions serve as our compass, guiding us through the myriad of choices and preferences that shape the modern movie-watching experience. From preferred movie ratings to rental frequency, we explore it all, giving each response a quantitative weight that illuminates patterns and trends.
+
+Diving deeper, we encounter binary questions, offering respondents a simple yet impactful choice between "yes" and "no." These questions serve as data points that punctuate our survey, allowing us to draw clear distinctions and make informed decisions based on dichotomous preferences.
+
+We venture into the realm of ordinal and nominal multiple-choice responses, steering away from traditional Likert scales to gather unique insights that go beyond the conventional. These responses are the paintbrush strokes on our canvas, adding color and texture to the rich tapestry of movie-watching habits.
+
+In the final leg of our survey, we turn our attention to five demographic questions. These demographic data points - income, gender, marital status, location, and age - are the pillars upon which we build a comprehensive understanding of our respondents. Through these demographic lenses, we paint a vivid portrait of the diverse tapestry of movie enthusiasts.
+
+In sum, this survey isn't merely a collection of questions; it's an intricate data tapestry. It's an exploration of preferences, a journey through habits, and a window into the lives of movie aficionados. With data analytics as our compass, we're prepared to unveil the hidden gems of consumer behavior and gain profound insights into the world of movie renting.
+
+#### What can be done to improve the respondants' experiences?
+
+I re-created and structured this survey for maximum internal and external validation in a new version that can be taken and reviewed [here](https://utdallas.qualtrics.com/jfe/form/SV_41lep7uoARDxEN0). 
+
+In crafting this survey, I re-engineered and thoughtfully structured it with an unwavering focus on the pursuit of internal and external validation as well as minimizing non-responses. Our commitment to this approach stems from a deep understanding of the nuances involved in data analytics, which has led us to take several strategic measures.
+
+Recognizing that a significant portion of our respondents are likely to engage with this survey on mobile devices, we've implemented a design that optimizes user experience. To enhance clarity and mitigate potential respondent fatigue, the formidable Likert scale with its 12 subquestions has been artfully deconstructed into three distinct sections. By doing so, we encourage respondents to  engage with these most thought-provoking  questions in digestible portions, reducing the likelihood of survey abandonment.
+
+Moreover, we've positioned these questions at the outset of the survey, capturing the respondent's attention and fostering engagement right from the start. This not only contributes to the overall quality of the data collected but also sets a captivating tone for the survey experience.
+
+In an effort to make the survey more user-friendly, we've innovatively transformed Likert scale responses into user-friendly drop-down menus (seen below). This user-centric adaptation simplifies the process of answering, enhancing the overall survey experience. 
+
+![Drop Down Image](/Screenshot(assignment1))
+
+To further streamline respondent engagement, we've strategically incorporated force response questions and implemented skip logic. These features serve as invaluable tools in maintaining a minimal non-response rate while ensuring that the survey adapts to the unique preferences and behavior of each user.
+
+#### THE END
