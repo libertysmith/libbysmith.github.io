@@ -1,0 +1,63 @@
+```{r set up}
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# Scraping government websites
+
+### Systematic Data Retreival from GovInfo
+
+The script automates the process of downloading multiple files from a list of URLs. This is particularly useful for collecting large datasets from public domains, such as government reports, academic papers, or datasets made available by organizations. Manual downloading of numerous files is time-consuming and prone to error. Automation speeds up the process significantly and ensures consistency in file naming and storage. Researchers often use such scripts to gather data for analysis. For instance, downloading a series of reports or articles to perform text analysis, content analysis, or data extraction for further study. Automated scripts can be used to create backups of digital content that might be periodically updated or removed from the original source. The script demonstrates an ethical approach to web scraping by incorporating error handling and managing the rate of download requests, which is important to comply with legal and ethical standards.
+
+To prep, we load the purrr and magrittr packages, which are used for functional programming and pipeline-style programming, respectively. We then set the working directory to a specified path. This path needs to be modified by the user to reflect their local directory where files are sourced and copied.
+
+```{r}
+library(purrr)
+library(magrittr)
+setwd("C:/Users/hirel/OneDrive/Documents/SDAR - FW23/Methods of Data Collection/quartogit")
+save_dir <- "C:/Users/hirel/OneDrive/Documents/SDAR - FW23/Methods of Data Collection/quartogit"
+```
+
+In order to eventually download the data, we need a specified list of documents to download from the website we are working with. GovInfo.gov offers CSV and JSON filetypes that lists all documents that match our selected search criterion (as pictured below).
+
+To demonstrate, we will select to scrape all documents originating from hearings of the House Foreign Affairs committee of the 118th Congress. Reads a CSV file ("file.csv") into the govfiles dataframe. Extracts specific columns (packageId, pdfLink, id) from govfiles and assigns them to new variables (govfiles\$id, pdf_govfiles_url, pdf_govfiles_id).
+
+![GovInfo Search Tool](Screenshot (assignment6).png){fig-align="center"}
+
+```{r}
+govfiles= read.csv("govinfo-search-results-2023-12-08.csv.csv")
+govfiles$id = govfiles$packageId
+pdf_govfiles_url = govfiles$pdfLink
+pdf_govfiles_id <- govfiles$id
+```
+
+Below we define a function to download PDFs from a given URL to a specified file path. It uses tryCatch for error handling and Sys.sleep to pause between downloads, reducing the risk of overloading the server or being flagged for unusual activity.
+
+```{r}
+download_govfiles_pdf <- function(url, id) {
+  tryCatch({
+    destfile <- paste0(save_dir, "govfiles_", id, ".pdf")
+    download.file(url, destfile = destfile, mode = "wb") # Binary files
+    Sys.sleep(runif(1, 1, 3))  # Important: random sleep between 1 and 3 seconds to avoid suspicion of "hacking" the server
+    return(paste("Successfully downloaded:", url))
+  },
+  error = function(e) {
+    return(paste("Failed to download:", url))
+  })
+}
+```
+
+The below then executes the function by initiating the download of PDFs from URLs using a purrr functional map. The map iterates over the list of URLs and corresponding IDs, downloading each file. It will also capture the end time after downloads are complete.
+
+```{r}
+start.time <- Sys.time()
+message("Starting downloads")
+results <- 1:length(pdf_govfiles_url) %>% 
+  purrr::map_chr(~ download_govfiles_pdf(pdf_govfiles_url[.], pdf_govfiles_id[.]))
+message("Finished downloads")
+end.time <- Sys.time()
+time.taken <- end.time - start.time
+time.taken
+print(results)
+```
+
+# THE END
