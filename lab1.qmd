@@ -1,0 +1,64 @@
+
+```{r setup}
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# Why are Graphics Important? Graphing Models with Francis Anscombe's quartet
+
+The function of this exercise is to illustrate the importance of graphing data before analyzing it.
+
+```{r}
+data(anscombe)  # Load Anscombe's data
+View(anscombe) # View the data
+summary(anscombe)
+```
+
+Anscombe's quartet is a collection of four different datasets designed to have nearly identical simple descriptive statistics (like mean, variance, correlation, and linear regression line) but very different distributions and relationships when visualized.
+
+## Scatter plot and Linear Model: Plotting x1 against y1
+
+```{r}
+plot(anscombe$x1,anscombe$y1)
+lm1 <- lm(y1 ~ x1, data=anscombe) # Regression Model
+abline(coefficients(lm1)) # Regression Line
+summary(lm1)
+```
+
+The graph depicts a positive correlation between x1 and y1. The first dataset shows a typical linear relationship between x1 and y1. The points are scattered around a straight line with some small random variation.  This is what we might expect from a dataset with a linear relationship. The regression line fits well, and the summary statistics (mean, variance, correlation, and regression line) accurately describe the underlying pattern. This is the kind of data where statistical summaries can be reliable and useful.
+
+
+## Scatter plot and Non-Linear Model: Plotting x2 against y2
+```{r}
+plot(anscombe$x2,anscombe$y2)
+lm2 <- lm(y2 ~ x2, data=anscombe)
+abline(coefficients(lm2))
+summary(lm2)
+```
+
+ The second dataset exhibits a non-linear (curved) relationship between x3 and y3. The points form a clear curve rather than a straight line. Despite the non-linear pattern, the regression line computed from summary statistics is a straight line, which does not fit the data well. The correlation coefficient is relatively high, suggesting a strong relationship, but it fails to capture the curvature in the data. This graph shows that summary statistics like correlation and linear regression can be misleading when the actual relationship is non-linear. Visualizing the data is crucial to recognize the true nature of the relationship.
+ 
+## Scatter plot and Linear Relationship with Outlier: Plotting x3 against y3
+
+```{r}
+plot(anscombe$x3,anscombe$y3)
+lm3 <- lm(y3 ~ x3, data=anscombe)
+abline(coefficients(lm3))
+summary(lm3)
+```
+
+The third dataset appears linear except for one prominent outlier. This single point is far from the others and has a large y value compared to its x value. The presence of the outlier significantly affects the statistical properties, especially the regression line. The summary statistics (like the mean, variance, and correlation) suggest a strong linear relationship, but the outlier's influence distorts the regression line and correlation. If we only rely on these statistics, we miss the fact that most of the data follow a linear trend, but one point skews the analysis. This graph illustrates how a single extreme value can mislead interpretations based on statistical summaries alone.
+
+## Scatterplot and Vertical Pattern with Influential Point: Plotting x4 against y4
+
+```{r}
+plot(anscombe$x4,anscombe$y4)
+lm4 <- lm(y4 ~ x4, data=anscombe)
+abline(coefficients(lm4))
+summary(lm4)
+```
+
+In the fourth dataset, most of the x4 values are nearly identical, except for one point with a much different x value. The regression line appears almost horizontal because of the high influence of this single point. The statistical summaries indicate a moderate correlation and a regression line, but the actual data pattern reveals a different story. The dataset has a nearly vertical distribution, and the regression line is significantly influenced by just one point with an atypical x value. This scenario demonstrates how a single influential point can drastically change the results of statistical analyses. Without visualization, we would not notice that most of the data do not exhibit a meaningful linear relationship.
+
+# Key Takeaways
+
+Anscombe's quartet demonstrates that relying solely on summary statistics like mean, variance, correlation, or regression coefficients can be misleading. Visualizing data allows us to see the actual patterns, relationships, and potential anomalies, leading to more accurate interpretations and decisions. It emphasizes that graphical representation is an essential complement to statistical analysis in understanding the true nature of data.
