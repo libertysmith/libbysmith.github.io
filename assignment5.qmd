@@ -1,0 +1,120 @@
+```{r setup}
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# Web Scraping and Word Clouds
+
+### Web Scraping Wikipedia's Foreign Exchange Reserve Table
+
+Web scraping is a powerful tool for gathering and aggregating data from various online sources. For instance, economists, financial analysts, or researchers might scrape economic data from different websites for analysis and forecasting. Companies often use web scraping to collect data on competitors, market trends, pricing, and customer opinions from e-commerce sites, review platforms, and forums, aiding in strategic planning and decision-making. Scholars and students might scrape data from digital libraries, academic journals, or educational websites for research projects, literature reviews, or data-driven studies. Media and content-based websites might scrape news, articles, and blogs from various online sources to aggregate content for their readers. Web scraping helps in SEO optimization and digital marketing strategies by gathering data on keyword rankings, backlinks, and competitor website content.
+
+We first loads the tidyverse and rvest libraries, which are essential for data manipulation and web scraping respectively. First, we load the tidyverse and rvest libraries, which are essential for data manipulation and web scraping respectively. Libraries like rvest simplify the extraction of data from web pages, making it accessible even for those with limited programming experience.
+
+```{r}
+library(tidyverse)
+library(rvest)
+```
+
+The script sets the URL to the Wikipedia page for "List of countries by foreign-exchange reserves". Using rvest, it reads the HTML content of the specified URL and stores it in the variable wikiforreserve. The class function is then used to check the class of the wikiforreserve object.
+
+```{r}
+url <- 'https://en.wikipedia.org/wiki/List_of_countries_by_foreign-exchange_reserves'
+#Reading the HTML code from the Wiki website
+wikiforreserve <- read_html(url)
+class(wikiforreserve)
+```
+
+The script uses XPath to locate a specific table on the webpage. The XPath is used with html_nodes to select the table, and html_table to convert the HTML table into a data frame. This data frame is stored in the variable foreignreserve. The script then extracts the first table from foreignreserve into the variable fores. It renames the columns of the fores data frame to "Rank", "Country", "Forexres", "Date", "Change", "Sources". The script displays the first 10 country names from the fores data frame.
+
+```{r}
+foreignreserve <- wikiforreserve %>%
+  html_nodes(xpath='//*[@id="mw-content-text"]/div/table[1]') %>%
+  html_table()
+class(foreignreserve)
+fores = foreignreserve[[1]]
+
+
+names(fores) <- c("Rank", "Country", "Forexres", "Date", "Change", "Sources")
+colnames(fores)
+head(fores$Country, n=10)
+```
+
+We can then use the stringr library for string manipulation. The script creates a new variable newdate in the fores data frame, which contains the 'Date' column data with trailing notes removed. This is done using the str_split_fixed function to split the 'Date' column at the "\[" character and keeping the first part. Finally, the cleaned and processed data frame fores is written to a CSV file named "fores.csv", with row names excluded.
+
+```{r}
+library(stringr)
+fores$newdate = str_split_fixed(fores$Date, "\\[", n = 2)[, 1]
+
+
+write.csv(fores, "fores.csv", row.names = FALSE)
+```
+
+However, it's important to note that web scraping should be conducted responsibly and ethically. This includes respecting website terms of service, avoiding overloading servers, and being mindful of privacy and data use regulations.
+
+### Text Mining for Word Cloud using Winston Churchill's speech "Their Finest Hour."
+
+Text mining, as demonstrated in the script, is used to analyze large volumes of text data to extract meaningful patterns and trends. For example, analyzing speeches, customer reviews, or social media posts to identify prevalent themes or sentiments. Word clouds are a popular method of visually representing text data. They highlight the most frequent words in a dataset, with word size proportional to frequency. This makes it easy to quickly grasp key themes or topics in the text.These techniques are particularly useful for exploratory analysis of qualitative data, offering a quick and intuitive understanding of the content without the need for deep statistical analysis. Businesses often use text mining and word clouds to analyze customer feedback, reviews, or social media mentions to understand customer needs, preferences, and perceptions. Researchers and students may use these methods to analyze literary works, academic papers, or speeches to identify key themes, stylistic features, or historical trends in language use.
+
+The script starts by installing and then loading the easypackages library, which is used to easily load multiple R packages. It then uses the packages function from easypackages to load a suite of packages necessary for text mining and word cloud generation (XML, wordcloud, RColorBrewer, NLP, tm, and quanteda).
+
+```{r}
+library(easypackages)
+packages("XML","wordcloud","RColorBrewer","NLP","tm","quanteda", prompt = T)
+```
+
+The script encodes a URL (Winston Churchill's speech) for proper formatting and uses it to download text data from the web. The htmlTreeParse function from the XML package is used to read and parse the HTML content of the webpage. It specifically extracts paragraph elements (
+
+<p>
+
+) and stores the text in the churchill variable. The first three elements of churchill are displayed using head. The text is then converted into a vector source (words.vec) for further processing in text mining.
+
+```{r}
+ChurchillLocation <-URLencode("http://www.historyplace.com/speeches/churchill-hour.htm")
+doc.html<- htmlTreeParse(ChurchillLocation, useInternal=TRUE)
+churchill <- unlist(xpathApply(doc.html, '//p', xmlValue))
+churchill
+head(churchill, 3)
+words.vec <- VectorSource(churchill)
+```
+
+The vector source is converted into a text corpus (words.corpus) using the Corpus function from the tm package. The contents of the corpus are inspected.The script applies several preprocessing steps to the text corpus:
+
+```         
+Converts all text to lower case.
+Removes punctuations and numbers.
+Removes common stopwords (frequent but uninformative words like 'the', 'and', etc.) in English.
+```
+
+A Term Document Matrix (tdm) is created from the processed text corpus.
+
+```{r}
+class(words.vec)
+
+words.corpus <- Corpus(words.vec)
+inspect(words.corpus)
+
+words.corpus <- tm_map(words.corpus, content_transformer(tolower))
+
+words.corpus <- tm_map(words.corpus, removePunctuation)
+words.corpus <- tm_map(words.corpus, removeNumbers)
+words.corpus <- tm_map(words.corpus, removeWords, stopwords("english"))
+
+tdm <- TermDocumentMatrix(words.corpus)
+inspect(tdm)
+```
+
+The script transforms the term document matrix into a matrix (m), calculates the sum of word occurrences (wordCounts), and sorts them in decreasing order. The top elements of wordCounts are displayed. Two word clouds are created using the wordcloud function: The first word cloud is generated directly from the data frame cloudFrame.The second word cloud is more customized, setting minimum frequency, order, number of words, scale, rotation percentage, and colors.
+
+```{r}
+m <- as.matrix(tdm)
+wordCounts <- rowSums(m)
+wordCounts <- sort(wordCounts, decreasing=TRUE)
+head(wordCounts)
+cloudFrame<-data.frame(word=names(wordCounts),freq=wordCounts)
+
+set.seed(1234)
+wordcloud(cloudFrame$word,cloudFrame$freq)
+wordcloud(names(wordCounts),wordCounts, min.freq=3,random.order=FALSE, max.words=500,scale=c(3,.5), rot.per=0.35,colors=brewer.pal(8,"Dark2"))
+```
+
+# THE END

@@ -1,0 +1,100 @@
+```{r setup}
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# API Requests of Public Data
+
+### Extracting and Analyzing National US Census data 
+
+The techniques demonstrated here are commonly used in the fields of data science, geography, urban planning, and public policy for several key reasons:
+
+ By accessing and analyzing Census data, researchers and policymakers can gain insights into demographic trends like age distribution and income levels across different regions. This information is crucial for understanding population dynamics and socioeconomic conditions. Governments and organizations use this type of data to inform decisions on resource allocation. Understanding where different demographics are located helps in planning public services, infrastructure, healthcare, education, and other community needs. 
+ 
+Urban planners use such data to understand the needs of different areas. For instance, income and age data can help in planning housing, transportation, and commercial developments to better serve the population. Policymakers rely on accurate, up-to-date demographic data to craft policies that address the needs of various population segments. For example, understanding income levels by tract can help in designing economic assistance programs. Researchers in sociology, economics, and other social sciences use Census data to study societal trends, economic conditions, and their impact on different population groups. Companies use demographic data for market analysis, identifying potential customer bases, and deciding where to locate businesses or how to tailor marketing strategies.
+
+The popularity of these techniques stems from the richness and accessibility of Census data, combined with the power of tools like R for data analysis and visualization. R's extensive package ecosystem, particularly for handling spatial data, makes it a preferred choice for professionals working with geographic and demographic data. Additionally, the ability to create both static and interactive visualizations helps in communicating complex data insights in an understandable and visually appealing way.
+
+ These packages assist in data manipulation, mapping, and accessing Census data. The tidycensus and tigris libraries are loaded, which are specifically designed for working with Census data and TIGER/Line Shapefiles, respectively.
+
+```{r}
+lapply(c("tidyverse", "ggmap","mapproj", "tidycensus","tigris", "ggplot2"), require, character.only = TRUE)
+options(tigris_use_cache = TRUE)
+```
+
+The script guides through obtaining an API key from the U.S. Census Bureau, which is essential for accessing the Census data. The key is then stored in the environment for secure access. The script uses get_acs() function from tidycensus to fetch American Community Survey (ACS) data. In the first instance, it retrieves 2019 data on median age by state, and in the second, 2020 income data by tract for Texas and specifically for Dallas County. The geometry = TRUE parameter in these functions indicates that geographical information for mapping is also being retrieved.
+
+```{r}
+census_api_key("1eea7d322f1238a00849ad2e66f6258e3a0697e2", install = TRUE, overwrite=TRUE) 
+acs19 = tidycensus::load_variables(2019, "acs5", cache = TRUE)
+acs19_Profile = load_variables(2019 , "acs5/profile", cache = TRUE)
+us_median_age19 <- get_acs(
+  geography = "state",
+  variables = "B01002_001",
+  year = 2019,
+  survey = "acs1",
+  geometry = TRUE,
+  resolution = "20m"
+) %>%
+  shift_geometry()
+```
+
+ We then call ggplot2 (part of tidyverse) for creating a map showing the median age by state for 2019. The map is styled with certain themes and color scales. The script then shifts to visualizing income data using both tmap and mapview packages. For Texas, it plots income data by tract, and for Dallas, it visualizes this data using interactive maps. 
+
+```{r}
+plot(us_median_age19$geometry)
+ggplot(data = us_median_age19, aes(fill = estimate)) + 
+  geom_sf(col="white") +  # Why color is white?
+  theme_bw() +
+  scale_fill_distiller(palette = "PuBuGn",  
+                       direction = 1) + 
+  labs(title = "  Median Age by State, 2019",
+       caption = "Data source: 2019 1-year ACS, US Census Bureau",
+       fill = "", family="calibri") +
+  theme(legend.position=c(.08,.6), legend.direction="vertical") +
+  theme(text = element_text(family = "Palatino"), plot.title = element_text(hjust = 0.5))
+```
+
+### Extracting and Analyzing State-Level US Census data 
+
+The above script demonstrates a comprehensive process of accessing, processing, and visualizing demographic data from the U.S. Census Bureau, focusing on state-level median age. Below I demonstrate similar visualizations on the tract-level income data within Texas. First, load the appropriate libraries and ready your R settings to accept the file formats we will download from a .gov site. 
+
+```{r}
+lapply(c("tidyverse", "ggmap","mapproj", "tidycensus","tigris", "tmap", "mapview"), require, character.only = TRUE)
+options(tigris_use_cache = TRUE)
+```
+
+Let's download TX state tract income data and plot it.
+```{r}
+tx_income <- get_acs(
+  geography = "tract", 
+  variables = "B19013_001",
+  state = "TX", 
+  year = 2020,
+  geometry = TRUE
+)
+tx_income
+plot(tx_income["estimate"])
+tmap_mode("view") # Make it interactive
+```
+
+Let's zoom in a little further and make a map based on Dallas, TX income data. 
+
+```{r}
+dallas_income <- get_acs(
+  geography = "tract",
+  variables = "B19013_001",
+  year = 2020,
+  state = "TX",
+  county = "Dallas",
+  geometry = TRUE
+)
+
+tm_shape(dallas_income) + 
+  tm_fill(col = "estimate", palette = "YlOrRd",
+          alpha = 0.5)
+
+library(mapview)
+mapView(dallas_income, zcol = "estimate")
+```
+
+# THE END

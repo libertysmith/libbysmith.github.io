@@ -1,0 +1,49 @@
+```{r setup}
+knitr::opts_chunk$set(warning = FALSE)
+```
+
+# Critiquing Graphics
+
+## Shiller P/E Ratio vs. 10-Year US Treasury Rate
+
+A graph titled "Shiller P/E Ratio vs. 10-Year US Treasury Rate" is depicting the relationship between the Shiller P/E ratio (also known as the Cyclically Adjusted Price-to-Earnings ratio, or CAPE ratio) and the 10-year US Treasury yield over time.
+
+![](images/Shiller%20PE%20Ratio%20vs.%2010Year%20US%20Treasury%20Rate.jpg)
+
+Shiller P/E Ratio (CAPE Ratio):
+
+This ratio measures the price of stocks relative to the average inflation-adjusted earnings over the previous 10 years. It is used as a long-term valuation metric for the stock market. A high Shiller P/E ratio suggests that stocks are relatively expensive compared to their historical earnings, which may indicate an overvalued market. A low ratio suggests stocks are relatively cheap and may be undervalued.
+
+10-Year US Treasury Rate:
+
+This is the interest rate on US government bonds with a 10-year maturity. It is often used as a benchmark for long-term interest rates and as an indicator of economic expectations and investor sentiment. A higher yield may reflect expectations of rising inflation or a stronger economy, while a lower yield may indicate expectations of economic slowdown or low inflation.
+
+Historically, there has been an inverse relationship between these two indicators. When the 10-year Treasury rate is low, investors may seek higher returns in stocks, which can drive up the Shiller P/E ratio. Conversely, when Treasury rates are high, investors may prefer the safer, more stable returns from bonds, potentially leading to a lower P/E ratio.
+
+The graph illustrates, not overwhelmingly, an inverse correlation between interest rates and the Shiller P/E ratio. The data generally supports the established notion that stock valuations tend to decrease when interest rates are high. However, it is important to note that while this correlation exists, it is not particularly strong, and the relationship can deviate significantly, especially during periods of extreme macroeconomic conditions, as highlighted in the identified events.
+
+## Criticism based on Nathan Yau's Visualization Pillars
+
+Nathan Yau's critiques of bad data visualizations often focus on clarity, accessibility, and how well the design communicates the underlying data without unnecessary distractions. To emulate his style of critique for this graph, here are points that might be raised.
+
+### 1) Text Size Issues:
+
+Small Axis Labels and Title: Yau frequently emphasizes the importance of legibility. In this graph, the small text for axis labels and the title likely forces viewers to squint or zoom in, detracting from its readability. The axis labels should be prominent enough to convey the meaning of the data without straining the audience's eyes. Yau would probably argue that text should be larger than data points to provide immediate clarity.
+
+### 2) Overuse of Colors:
+
+Color Coding by Decade: While coloring data by decade may seem useful, using too many different colors can lead to confusion or overwhelm the viewer, especially if they are not easily distinguishable (e.g., light blue vs. grey blue). Yau might suggest that color should be used sparingly or simplified to avoid overcomplication. In this case, fewer or more intuitive color groupings such as a color gradient could help highlight trends or key insights more effectively.
+
+### 3) Unclear or Distracting Annotations:
+
+Circled Events: The notable event annotations like the "Volcker shock," "Great Recession," "Covid Crash," and "Dot-com Bubble" are helpful, but the red circles are too bold or dominant and they distract from the actual data points. Yau often warns against excessive visual clutter. If the circles take too much attention, he would likely recommend more subtle ways of highlighting these groupings, such as shaded areas or lighter, thinner circles that still draw attention without overpowering the chart.
+
+### 4) Context and Data Density:
+
+Monthly Observations Since 1960: Displaying monthly data across 64 years may result in too much visual congestion. Yau would suggest finding a way to reduce the complexity, such as by aggregating data into yearly intervals or offering an interactive version of the chart where users can zoom in. When too much data is crammed into one static chart, it becomes difficult to discern meaningful patterns.
+
+### 5) Alignment with Purpose:
+
+If the aim of the graph is to highlight key historical events, as the labels suggest, Yau would likely advise making those events more central to the design. Focusing more on the notable events (e.g., bolding or enlarging these sections) while deemphasizing the rest of the chart could make the visualization more focused and easier to interpret.
+
+# END

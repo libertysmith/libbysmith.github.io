@@ -1,0 +1,93 @@
+```{r setup}
+knitr::opts_chunk$set(warning = FALSE)
+```
+---
+author: "Libby Smith"
+format: html
+editor: visual
+execute: 
+  freeze: true
+---
+
+# Google Trends Website VS Rstudio's gtrendsR package
+
+### Google Trends Website
+
+Google Trends is a web service provided by Google that allows users to explore the popularity of specific search terms over time. It provides valuable insights into how often a particular keyword or topic has been searched for on Google's search engine. Here's an explanation of how Google Trends extracts and presents search term trends, including its customization options and main functionalities:
+
+![Search Terms Trump, Biden, and Election since launch of Google Trends](/Screenshot(assignment2a))
+
+**Data Collection**: Google Trends collects data from Google Search queries. It compiles this data anonymously and aggregates it to create a comprehensive dataset.
+
+**Time Period Customization**: Users can customize the time period they want to analyze. Google Trends allows you to specify a custom date range, from a few hours to several years. You can select specific start and end dates, making it easy to focus on a particular timeframe.
+
+**Data Normalization**: Google Trends normalizes data to allow for fair comparisons. It scales search interest data relative to the total search volume, which ensures that results are not influenced by the overall growth in Google searches over time. This normalization helps users understand relative popularity.
+
+**Geographic Customization**: Users can choose the geographic region for which they want to view search trends. Google Trends provides data at various levels, from global to city-specific. This feature is useful for analyzing how search interests vary across different locations.
+
+**Category Filtering**: Google Trends categorizes search topics into specific categories. Users can filter search results by these categories, making it easier to explore trends in specific industries or areas of interest.
+
+**Related Queries and Topics**: Google Trends offers insights into related queries and topics. Users can see which search terms are frequently associated with the topic they are exploring. This feature helps identify related trends and keywords.
+
+**Real-Time Data**: Google Trends provides real-time data on search trends. Users can see how the popularity of a search term changes over the course of a day, week, or any specified time interval. This is particularly useful for monitoring breaking news or events.
+
+**Data Visualization**: The service presents data in easy-to-understand visualizations, including line graphs and charts. Users can quickly grasp the popularity trends of their selected search terms.
+
+**Exporting Data**: Google Trends allows users to export data for further analysis. You can download CSV files containing search interest data for the terms and timeframes you've selected.
+
+**Comparative Analysis**: Users can compare the search interest of multiple terms simultaneously. This feature helps identify which terms are more popular and how they relate to each other.
+
+In summary, Google Trends extracts data from Google Search queries, normalizes it for fair comparisons, and offers a range of customization options. Users can explore search term trends based on different timeframes, locations, categories, and related queries. It also provides real-time data, visualization tools, and the ability to export data for in-depth analysis. Google Trends is a valuable tool for marketers, researchers, and anyone interested in understanding search trends and consumer behavior.
+
+### Rstudio's gtrendsR package
+
+While both Google Trends website and the gtrendsR package in R allow you to access Google Trends data, there are differences in how you interact with and utilize these methods.
+
+```{r}
+# Load package
+library(gtrendsR)
+# Pull Google Trends Data from "all time" interval
+BidenTrumpElection = gtrends(c("Trump","Biden","election"), time = "all")
+# Graph identical plot seen in web example
+par(family="Georgia")
+plot(BidenTrumpElection)
+```
+
+The Google Trends website welcomes users with its intuitive, user-friendly interface, akin to an explorer's trusted map and compass. Here, one can quickly visualize trends, explore geographic variations, and uncover valuable insights with ease.
+
+The 'gtrendsR' package has optional arguments for many of the same customizations users can change on the website including but not limited to time, geolocation, and search type that the webpage offers. Both have near identical data querying and toggling settings. While both Google Trends website and the gtrendsR package in R allow you to access Google Trends data, there are differences in how you interact with and utilize these methods. Main differences lie in availability of a user-friendly interface verses a programmic one which enable more visualization and computation methods through base R and other R packages in analyzing the trends.
+
+On the other hand, the gtrendsR package in R equips adventurers with a toolkit for programmatic exploration. It's like having a set of powerful scientific instruments at your disposal. This method empowers users with the ability to harness the full analytical prowess of R and other complementary R packages. Whether you seek to uncover hidden trends, apply advanced statistical methods, or create stunning visualizations, the programmatic nature of this package amplifies your analytical capabilities.
+
+See an example below. We will create a heat map through the ggplot2 package to extrapolate on correlations.
+
+```{r}
+# Load ggplot2 package
+library(ggplot2)
+
+# Create new list object specific heat map purposes
+BidenTrumpElection2 <- gtrends(c("Trump", "Biden", "election"), 
+                               time = "today+5-y", 
+                               geo = ("US"))
+
+# Convert "date" column to POSIXct format
+BidenTrumpElection2$interest_over_time$date <- as.POSIXct(BidenTrumpElection2$interest_over_time$date)
+
+# Replace "<1" with 0 in the "hits" column
+BidenTrumpElection2$interest_over_time$hits[BidenTrumpElection2$interest_over_time$hits == "<1"] <- 0
+
+# Convert "hits" to continuous
+BidenTrumpElection2$interest_over_time$hits <- as.numeric(BidenTrumpElection2$interest_over_time$hits)
+
+# Create the heatmap
+heatmap_plot <- ggplot(data = BidenTrumpElection2$interest_over_time, aes(x = date, y = keyword, fill = hits)) +
+  geom_tile() +
+  scale_fill_gradient(low = "blue", high = "red") +
+  labs(title = "Google Trends Heatmap", x = "Date", y = "Keyword") +
+  theme_minimal()
+
+# Print the heatmap
+print(heatmap_plot)
+```
+
+# THE END
